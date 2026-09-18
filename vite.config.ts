@@ -8,5 +8,13 @@ export default defineConfig({
   plugins: [vue(), vueDevTools(), tailwindcss()],
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
   optimizeDeps: { include: ['vue', 'vue-router', 'pinia', 'vue-i18n'] },
-  server: { host: '0.0.0.0' },
+  server: {
+    host: '0.0.0.0',
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+    },
+  },
 })
