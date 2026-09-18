@@ -6,7 +6,7 @@ import type { AppSettings, UserPreferences } from '@/types/settings'
 
 function cloneSettings(value: AppSettings): AppSettings { return JSON.parse(JSON.stringify(value)) as AppSettings }
 
-export const defaultPreferences: UserPreferences = { language: 'id', dateFormat: 'DD MMM YYYY', weightUnit: 'kg', areaUnit: 'ha', theme: 'light' }
+export const defaultPreferences: UserPreferences = { language: 'en', dateFormat: 'DD MMM YYYY', weightUnit: 'kg', areaUnit: 'ha', theme: 'light' }
 export const defaultSettings: AppSettings = {
   profile: { photo: '', fullName: 'Abi', email: 'abi@example.com', phone: '081234567890' },
   preferences: { ...defaultPreferences, language: i18n.global.locale.value as Locale },

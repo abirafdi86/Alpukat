@@ -8,7 +8,7 @@ export type Locale = (typeof supportedLocales)[number]
 
 function getInitialLocale(): Locale {
   const saved = localStorage.getItem(LOCALE_STORAGE_KEY)
-  return saved === 'en' || saved === 'id' ? saved : 'id'
+  return saved === 'en' || saved === 'id' ? saved : 'en'
 }
 
 export const i18n = createI18n({
