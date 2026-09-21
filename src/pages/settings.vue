@@ -46,6 +46,7 @@ function cancelChanges() { Object.assign(draft, cloneSettings(store.settings)); 
 function resetPreferences() { Object.assign(draft.preferences, { ...defaultPreferences, language: store.language }); resetOpen.value = false }
 function changePhoto(event: Event) { const file = (event.target as HTMLInputElement).files?.[0]; if (!file) return; const reader = new FileReader(); reader.onload = () => { draft.profile.photo = String(reader.result) }; reader.readAsDataURL(file) }
 function changePassword() { const result = z.object({ current: z.string().min(1), next: z.string().min(8), confirm: z.string() }).refine((value) => value.next === value.confirm, { path: ['confirm'] }).safeParse(password); if (!result.success) { passwordError.value = t(password.next.length < 8 ? 'validation.passwordMin' : 'validation.passwordMatch'); return } passwordError.value = ''; Object.assign(password, { current: '', next: '', confirm: '' }); showToast(t('settings.security.passwordChanged')) }
+async function logout() { await auth.logout(); logoutOpen.value = false; await router.replace('/login') }
 function beforeUnload(event: BeforeUnloadEvent) { if (!dirty.value) return; event.preventDefault(); event.returnValue = '' }
 onMounted(() => window.addEventListener('beforeunload', beforeUnload)); onBeforeUnmount(() => window.removeEventListener('beforeunload', beforeUnload))
 onBeforeRouteLeave(() => dirty.value ? window.confirm(t('settings.unsaved.leaveWarning')) : true)
@@ -64,6 +65,6 @@ watch(() => draft.preferences.language, (value) => store.applyLanguage(value))
       <div v-if="active !== 'security'" class="mt-5 flex flex-wrap justify-end gap-3"><UiButton variant="secondary" :disabled="!dirty || saving" @click="cancelChanges">{{ t('common.cancel') }}</UiButton><UiButton :disabled="!dirty" :loading="saving" @click="saveChanges"><template #leading><Save :size="17" /></template>{{ t('settings.actions.save') }}</UiButton></div>
     </main></div>
   <UiModal v-model="resetOpen" :title="t('settings.reset.title')" :description="t('settings.reset.description')"><template #footer><UiButton variant="secondary" @click="resetOpen = false">{{ t('common.cancel') }}</UiButton><UiButton @click="resetPreferences">{{ t('settings.actions.reset') }}</UiButton></template></UiModal>
-  <UiModal v-model="logoutOpen" :title="t('settings.security.logoutTitle')" :description="t('settings.security.logoutDescription')"><template #footer><UiButton variant="secondary" @click="logoutOpen = false">{{ t('common.cancel') }}</UiButton><UiButton variant="danger" @click="auth.logout(); router.replace('/login')">{{ t('settings.security.logout') }}</UiButton></template></UiModal>
+  <UiModal v-model="logoutOpen" :title="t('settings.security.logoutTitle')" :description="t('settings.security.logoutDescription')"><template #footer><UiButton variant="secondary" @click="logoutOpen = false">{{ t('common.cancel') }}</UiButton><UiButton variant="danger" :loading="auth.isLoading" @click="logout">{{ t('settings.security.logout') }}</UiButton></template></UiModal>
   <div v-if="toast" class="fixed right-4 bottom-4 z-50"><UiToast v-bind="toast" @dismiss="toast = null" /></div>
 </div></template>

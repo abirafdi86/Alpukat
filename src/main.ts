@@ -3,10 +3,14 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import { i18n } from './i18n'
+import { useAuthStore } from './stores/auth.store'
 import './assets/css/main.css'
 
 const app = createApp(App)
-app.use(createPinia())
+const pinia = createPinia()
+app.use(pinia)
 app.use(i18n)
+await useAuthStore(pinia).hydrate()
 app.use(router)
-router.isReady().then(() => app.mount('#app'))
+await router.isReady()
+app.mount('#app')
