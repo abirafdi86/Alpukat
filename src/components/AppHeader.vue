@@ -35,10 +35,10 @@ const query = ref('')
 const results = computed(() => navigationItems.filter(item => (item.to !== '/users' || auth.user?.role === 'OWNER') && t(item.labelKey).toLowerCase().includes(query.value.trim().toLowerCase())))
 watch(searchOpen, value => { if (value) query.value = '' })
 watch(() => route.fullPath, () => { searchOpen.value = false; notificationsOpen.value = false; profileOpen.value = false })
-function handleUserAction(action: string) {
+async function handleUserAction(action: string) {
   if (action === 'profile') profileOpen.value = true
   else if (action === 'settings') void router.push('/settings')
-  else if (action === 'logout') { auth.logout(); void router.replace('/login') }
+  else if (action === 'logout') { await auth.logout(); await router.replace('/login') }
 }
 </script>
 

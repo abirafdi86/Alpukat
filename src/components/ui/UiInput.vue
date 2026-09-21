@@ -20,6 +20,6 @@ const descriptionId = computed(() => props.error || props.hint ? `${inputId.valu
         :aria-describedby="[descriptionId, $attrs['aria-describedby']].filter(Boolean).join(' ') || undefined" />
       <div v-if="$slots.trailing" class="absolute inset-y-0 right-1 flex items-center"><slot name="trailing" /></div>
     </div>
-    <p v-if="error || hint" :id="descriptionId" class="text-xs leading-5" :class="error ? 'text-red-700' : 'text-slate-500'">{{ error || hint }}</p>
+    <p v-if="error || hint" :id="descriptionId" :aria-live="error ? 'polite' : undefined" class="text-xs leading-5" :class="error ? 'text-red-700' : 'text-slate-500'">{{ error || hint }}</p>
   </div>
 </template>

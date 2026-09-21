@@ -8,6 +8,7 @@ withDefaults(defineProps<{
   type?: 'button' | 'submit' | 'reset'
   disabled?: boolean
   loading?: boolean
+  loadingLabel?: string
 }>(), { variant: 'primary', size: 'md', type: 'button' })
 
 const variants: Record<ButtonVariant, string> = {
@@ -22,7 +23,7 @@ const sizes = { sm: 'min-h-9 px-3 py-1.5', md: '', lg: 'min-h-11 px-5 py-2.5' }
     <LoaderCircle v-if="loading" :size="16" class="motion-safe:animate-spin" aria-hidden="true" />
     <slot name="leading" v-else />
     <slot />
-    <span v-if="loading" class="sr-only">Loading</span>
+    <span v-if="loading" class="sr-only">{{ loadingLabel ?? 'Loading' }}</span>
     <slot name="trailing" />
   </button>
 </template>
