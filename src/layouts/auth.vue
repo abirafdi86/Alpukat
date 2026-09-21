@@ -15,12 +15,10 @@ import AppBrand from '@/components/AppBrand.vue'
       </div>
       <div class="pointer-events-none absolute -right-20 bottom-12 size-72 rounded-[70%_0_70%_0] border border-green-200/70 bg-green-100/40 -rotate-12" aria-hidden="true"></div>
       <div class="pointer-events-none absolute -right-2 bottom-24 size-44 rounded-[70%_0_70%_0] border border-green-200/60 rotate-12" aria-hidden="true"></div>
-      <p class="relative z-10 text-xs text-green-800/70">Kebunku.com</p>
     </aside>
     <div class="flex min-h-dvh flex-col px-5 py-7 sm:px-8 sm:py-9">
       <div class="mb-8 lg:hidden"><AppBrand /></div>
       <main id="auth-content" class="mx-auto my-auto w-full max-w-md py-4 sm:py-6"><slot /></main>
-      <p class="mx-auto mt-6 max-w-md text-center text-xs leading-5 text-slate-500">{{ $t('auth.demoNotice') }}</p>
     </div>
   </div>
 </template>

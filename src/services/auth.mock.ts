@@ -3,13 +3,13 @@ import type { AuthError, AuthUser, LoginRequest, LoginResponse, MessageResponse,
 let currentSession: LoginResponse | null = null
 
 export const AUTH_MOCK_SCENARIOS = {
-  invalidCredentials: 'invalid@kebunku.test',
-  inactiveAccount: 'inactive@kebunku.test',
-  validationError: 'validation@kebunku.test',
-  rateLimited: 'rate-limit@kebunku.test',
-  serverError: 'server-error@kebunku.test',
-  networkError: 'network@kebunku.test',
-  hydrationNetworkError: 'hydrate-network@kebunku.test',
+  invalidCredentials: 'invalid@kebunhub.test',
+  inactiveAccount: 'inactive@kebunhub.test',
+  validationError: 'validation@kebunhub.test',
+  rateLimited: 'rate-limit@kebunhub.test',
+  serverError: 'server-error@kebunhub.test',
+  networkError: 'network@kebunhub.test',
+  hydrationNetworkError: 'hydrate-network@kebunhub.test',
 } as const
 
 function fail(error: AuthError): never { throw error }
@@ -22,9 +22,9 @@ function wait(signal?: AbortSignal): Promise<void> {
 }
 function membershipsFor(email: string): WorkspaceMembership[] {
   if (email.startsWith('no-workspace')) return []
-  const primary: WorkspaceMembership = { id: 'membership-demo-1', workspaceId: 'workspace-demo-1', workspaceName: 'Kebunku Demo', role: 'OWNER', status: 'ACTIVE' }
+  const primary: WorkspaceMembership = { id: 'membership-demo-1', workspaceId: 'workspace-demo-1', workspaceName: 'KebunHub Demo', role: 'OWNER', status: 'ACTIVE' }
   if (!email.startsWith('multi-workspace')) return [primary]
-  return [primary, { id: 'membership-demo-2', workspaceId: 'workspace-demo-2', workspaceName: 'Kebunku Nursery', role: 'MEMBER', status: 'ACTIVE' }]
+  return [primary, { id: 'membership-demo-2', workspaceId: 'workspace-demo-2', workspaceName: 'KebunHub Nursery', role: 'MEMBER', status: 'ACTIVE' }]
 }
 function responseFor(email: string): LoginResponse {
   const memberships = membershipsFor(email)
@@ -48,7 +48,7 @@ export async function mockLoginDemo(signal?: AbortSignal): Promise<LoginResponse
   if (scenario === 'unavailable') fail({ code: 'DEMO_UNAVAILABLE', status: 503 })
   if (scenario === 'rate-limit') fail({ code: 'TOO_MANY_ATTEMPTS', status: 429, retryAfterSeconds: 30 })
   if (scenario === 'network') fail({ code: 'NETWORK_ERROR' })
-  currentSession = responseFor('demo-user@kebunku.test')
+  currentSession = responseFor('demo-user@kebunhub.test')
   return currentSession
 }
 export async function mockGetCurrentUser(signal?: AbortSignal): Promise<LoginResponse> { await wait(signal); if (!currentSession) fail({ code: 'UNAUTHENTICATED', status: 401 }); if (currentSession.user.email === AUTH_MOCK_SCENARIOS.hydrationNetworkError) fail({ code: 'NETWORK_ERROR' }); return currentSession }

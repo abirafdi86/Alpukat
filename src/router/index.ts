@@ -4,7 +4,7 @@ import { installAuthGuards } from './guards'
 declare module 'vue-router' {
   interface RouteMeta {
     title?: string
-    layout?: 'auth' | 'default'
+    layout?: 'auth' | 'default' | 'public'
     requiresAuth?: boolean
     guestOnly?: boolean
   }
@@ -13,7 +13,7 @@ declare module 'vue-router' {
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/', redirect: '/dashboard' },
+    { path: '/', name: 'landing', component: () => import('@/views/public/LandingView.vue'), meta: { layout: 'public' } },
     { path: '/login', name: 'login', component: () => import('@/pages/login.vue'), meta: { title: 'Login', layout: 'auth', guestOnly: true } },
     { path: '/forgot-password', name: 'forgot-password', component: () => import('@/views/auth/ForgotPasswordView.vue'), meta: { title: 'Forgot password', layout: 'auth', guestOnly: true } },
     { path: '/reset-password', name: 'reset-password', component: () => import('@/views/auth/ResetPasswordView.vue'), meta: { title: 'Reset password', layout: 'auth', guestOnly: true } },
@@ -53,7 +53,7 @@ const router = createRouter({
 installAuthGuards(router)
 
 router.afterEach((to) => {
-  document.title = to.meta.title ? `${to.meta.title} | Kebunku.com` : 'Kebunku.com'
+  document.title = to.meta.title ? `${to.meta.title} | KebunHub` : 'KebunHub'
 })
 
 export default router

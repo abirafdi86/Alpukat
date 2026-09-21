@@ -12,6 +12,7 @@ import type {
 } from '../../shared/types/auth'
 
 const useMockAuth = import.meta.env.VITE_AUTH_MODE === 'mock'
+const useDevelopmentDemo = import.meta.env.DEV && import.meta.env.VITE_AUTH_MODE === undefined
 
 const backendErrorCodes = new Set<AuthErrorCode>([
   'INVALID_CREDENTIALS',
@@ -131,7 +132,7 @@ export async function resetPassword(payload: ResetPasswordRequest, signal?: Abor
 }
 
 export async function loginDemo(signal?: AbortSignal): Promise<LoginResponse> {
-  if (useMockAuth) return mockAuth.mockLoginDemo(signal)
+  if (useMockAuth || useDevelopmentDemo) return mockAuth.mockLoginDemo(signal)
   await initializeCsrf(signal)
   const { data } = await http.post<LoginResponse>('/api/auth/demo', undefined, { signal })
   return data

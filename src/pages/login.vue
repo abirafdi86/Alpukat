@@ -66,7 +66,8 @@ async function runAuthRequest(kind: 'login' | 'demo', request: (signal: AbortSig
   try {
     await request(current.signal)
     if (!current.signal.aborted) {
-      await router.replace(resolveAuthenticatedDestination(router, auth.workspaceCount, route.query.redirect))
+      const intendedDestination = kind === 'login' ? route.query.redirect : undefined
+      await router.replace(resolveAuthenticatedDestination(router, auth.workspaceCount, intendedDestination))
     }
   } catch (cause) {
     if (current.signal.aborted) return
@@ -124,7 +125,7 @@ onBeforeUnmount(() => {
       <UiButton variant="secondary" class="w-full" :loading="activeRequest === 'demo'" :loading-label="t('authActions.exploringDemo')" :disabled="submissionDisabled" @click="exploreDemo">{{ activeRequest === 'demo' ? t('authActions.exploringDemo') : t('auth.exploreDemo') }}</UiButton>
     </form>
 
-    <p class="mt-7 text-center text-sm text-slate-500">{{ t('auth.newToKebunku') }} <RouterLink to="/register" class="font-medium text-green-700 hover:text-green-800 hover:underline">{{ t('auth.createWorkspace') }}</RouterLink></p>
+    <p class="mt-7 text-center text-sm text-slate-500">{{ t('auth.newToKebunHub') }} <RouterLink to="/register" class="font-medium text-green-700 hover:text-green-800 hover:underline">{{ t('auth.createWorkspace') }}</RouterLink></p>
     <nav class="mt-8 flex justify-center gap-4 text-xs text-slate-500" :aria-label="t('auth.footerLinks')">
       <RouterLink to="/privacy" class="hover:text-green-700 hover:underline">{{ t('auth.privacy') }}</RouterLink>
       <RouterLink to="/terms" class="hover:text-green-700 hover:underline">{{ t('auth.terms') }}</RouterLink>
