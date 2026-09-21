@@ -36,6 +36,7 @@ import {
   landingPreviewMetrics,
 } from '@/data/landingPreview'
 import type { AuthErrorCode } from '../../../shared/types/auth'
+import landscapeImage from '@/assets/images/kebunhub-landscape.png'
 
 const { t } = useLocale()
 const router = useRouter()
@@ -142,16 +143,17 @@ onBeforeUnmount(() => {
     {{ t('common.skipToContent') }}
   </a>
 
-  <header class="relative z-40 border-b border-slate-200 bg-white" @keydown.esc="closeMenu">
+  <header class="sticky top-0 z-40 border-b border-slate-200/70 bg-white/75 backdrop-blur-xl" @keydown.esc="closeMenu">
     <nav class="mx-auto flex min-h-18 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8"
       :aria-label="t('landing.nav.label')">
       <AppBrand to="/" :aria-label="t('landing.nav.home')" />
 
-      <div class="hidden items-center gap-8 md:flex">
-        <a href="#features" class="inline-flex min-h-11 items-center font-medium text-slate-600 hover:text-green-700">{{
-          t('landing.nav.features') }}</a>
+      <div class="hidden items-center gap-1 rounded-full border border-slate-200/80 bg-slate-50/80 p-1 md:flex">
+        <a href="#features"
+          class="inline-flex min-h-9 items-center rounded-full px-4 font-medium text-slate-600 transition-colors hover:bg-white hover:text-green-700">{{
+            t('landing.nav.features') }}</a>
         <a href="#how-it-works"
-          class="inline-flex min-h-11 items-center font-medium text-slate-600 hover:text-green-700">{{
+          class="inline-flex min-h-9 items-center rounded-full px-4 font-medium text-slate-600 transition-colors hover:bg-white hover:text-green-700">{{
             t('landing.nav.howItWorks') }}</a>
       </div>
 
@@ -196,10 +198,11 @@ onBeforeUnmount(() => {
   </header>
 
   <main id="main-content">
-    <section class="relative overflow-hidden bg-gradient-to-b from-green-50/80 to-white"
+    <section
+      class="relative overflow-hidden bg-[radial-gradient(circle_at_top_right,_rgba(187,247,208,0.72),_transparent_38%),linear-gradient(180deg,_#f0fdf4_0%,_#ffffff_78%)]"
       aria-labelledby="landing-title">
       <div
-        class="pointer-events-none absolute -right-32 top-10 size-80 rounded-full border border-green-100 bg-green-50"
+        class="pointer-events-none absolute -right-32 top-10 size-80 rounded-full border border-green-100/80 bg-green-50/70 blur-[1px]"
         aria-hidden="true"></div>
       <div
         class="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[minmax(0,0.9fr)_minmax(520px,1.1fr)] lg:gap-16 lg:px-8 lg:py-14">
@@ -209,7 +212,7 @@ onBeforeUnmount(() => {
             <Sprout :size="15" aria-hidden="true" />{{ t('landing.hero.eyebrow') }}
           </p>
           <h1 id="landing-title"
-            class="mt-6 max-w-2xl text-4xl font-semibold leading-tight tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
+            class="mt-6 max-w-2xl text-4xl font-semibold leading-[1.08] tracking-[-0.04em] text-slate-950 sm:text-5xl lg:text-[4.5rem]">
             {{ t('landing.hero.title') }}
           </h1>
           <p class="mt-6 max-w-xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
@@ -218,20 +221,41 @@ onBeforeUnmount(() => {
 
           <AuthError v-if="demoErrorOrigin === 'hero'" class="mt-6 max-w-xl" :message="demoError" />
           <div v-if="isAuthenticatedVisitor" class="mt-8 flex">
-            <RouterLink :to="primaryDestination" class="ui-button ui-button-primary min-w-44">{{ t('landing.actions.openDashboard') }}<ArrowRight :size="17" aria-hidden="true" /></RouterLink>
+            <RouterLink :to="primaryDestination" class="ui-button ui-button-primary min-w-44">{{
+              t('landing.actions.openDashboard') }}
+              <ArrowRight :size="17" aria-hidden="true" />
+            </RouterLink>
           </div>
           <div v-else class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <RouterLink to="/login" class="ui-button ui-button-secondary sm:min-w-32">{{ t('landing.actions.signIn') }}</RouterLink>
-            <RouterLink to="/register" class="ui-button ui-button-primary sm:min-w-40">{{ t('landing.actions.getStarted') }}<ArrowRight :size="17" aria-hidden="true" /></RouterLink>
+            <RouterLink to="/login" class="ui-button ui-button-secondary sm:min-w-32">{{ t('landing.actions.signIn') }}
+            </RouterLink>
+            <RouterLink to="/register" class="ui-button ui-button-primary sm:min-w-40">{{
+              t('landing.actions.getStarted') }}
+              <ArrowRight :size="17" aria-hidden="true" />
+            </RouterLink>
             <UiButton variant="ghost" class="sm:min-w-36" :loading="demoPending"
               :loading-label="t('authActions.exploringDemo')" :disabled="demoDisabled" @click="exploreDemo('hero')">
               {{ demoActionLabel }}
             </UiButton>
           </div>
+          <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs font-medium text-slate-500">
+            <span class="inline-flex items-center gap-2"><span
+                class="size-2 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgb(220_252_231)]"></span>{{
+                  t('landing.capabilities.centralized') }}</span>
+            <span class="inline-flex items-center gap-2"><span
+                class="size-2 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgb(220_252_231)]"></span>{{
+                  t('landing.capabilities.dataDriven') }}</span>
+          </div>
         </div>
 
-        <div class="min-w-0" role="region" :aria-label="t('landing.preview.ariaLabel')">
-          <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div class="relative min-w-0" role="region" :aria-label="t('landing.preview.ariaLabel')">
+          <div class="pointer-events-none absolute -inset-3 overflow-hidden rounded-[2rem] opacity-35"
+            aria-hidden="true"
+            :style="{ backgroundImage: `url(${landscapeImage})`, backgroundPosition: 'center', backgroundSize: 'cover' }">
+          </div>
+          <div class="absolute -inset-5 rounded-[2rem] bg-green-200/30 blur-3xl" aria-hidden="true"></div>
+          <div
+            class="relative overflow-hidden rounded-[1.5rem] border border-white/80 bg-white/95 shadow-[0_30px_90px_-28px_rgba(15,23,42,0.45)] backdrop-blur transition-transform motion-safe:duration-500 hover:-translate-y-1">
             <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 sm:px-5">
               <div class="flex min-w-0 items-center gap-3">
                 <span class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-green-700 text-white">
@@ -246,9 +270,9 @@ onBeforeUnmount(() => {
                 t('landing.preview.status') }}</span>
             </div>
 
-            <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3 sm:p-5">
+            <div class="grid grid-cols-2 gap-3 bg-gradient-to-br from-slate-50 to-green-50/40 p-3 sm:p-5">
               <div v-for="metric in landingPreviewMetrics" :key="metric.labelKey"
-                class="min-w-0 rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
+                class="min-w-0 rounded-xl border border-slate-200/80 bg-white p-3 shadow-[0_8px_24px_-18px_rgba(15,23,42,0.55)] transition-transform motion-safe:duration-300 hover:-translate-y-0.5">
                 <p class="min-h-8 text-xs leading-4 text-slate-500">{{ t(metric.labelKey) }}</p>
                 <p class="mt-1 text-xl font-semibold tabular-nums text-slate-900">{{ t(metric.valueKey) }}</p>
                 <p class="mt-1 text-[11px] leading-4 text-green-700">{{ t(metric.detailKey) }}</p>
@@ -256,7 +280,7 @@ onBeforeUnmount(() => {
             </div>
 
             <div class="grid gap-4 p-3 sm:p-5 lg:grid-cols-[1.1fr_0.9fr]">
-              <div class="rounded-lg border border-slate-200 p-4">
+              <div class="rounded-xl border border-slate-200/80 bg-white/80 p-4">
                 <div class="flex items-center justify-between gap-3">
                   <p class="text-sm font-semibold text-slate-800">{{ t('landing.preview.trend') }}</p>
                   <TrendingUp :size="18" class="text-green-700" aria-hidden="true" />
@@ -270,7 +294,7 @@ onBeforeUnmount(() => {
                   t('landing.preview.weekStart') }}</span><span>{{ t('landing.preview.weekEnd') }}</span></div>
               </div>
 
-              <div class="rounded-lg border border-slate-200 p-4">
+              <div class="rounded-xl border border-slate-200/80 bg-white/80 p-4">
                 <p class="text-sm font-semibold text-slate-800">{{ t('landing.preview.recentActivities') }}</p>
                 <ul class="mt-3 space-y-3">
                   <li v-for="activityItem in landingPreviewActivities" :key="activityItem.titleKey"
@@ -292,21 +316,21 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
-    <section class="border-y border-slate-200 bg-slate-50" :aria-label="t('landing.capabilities.label')">
+    <section class="border-y border-slate-200/80 bg-white" :aria-label="t('landing.capabilities.label')">
       <div class="mx-auto grid max-w-7xl grid-cols-2 gap-px bg-slate-200 sm:grid-cols-4">
-        <div class="flex min-h-24 items-center gap-3 bg-slate-50 px-4 py-5 sm:px-6">
+        <div class="flex min-h-24 items-center gap-3 bg-white px-4 py-5 transition-colors hover:bg-green-50/50 sm:px-6">
           <Database :size="20" class="shrink-0 text-green-700" aria-hidden="true" /><span
             class="text-sm font-medium text-slate-700">{{ t('landing.capabilities.centralized') }}</span>
         </div>
-        <div class="flex min-h-24 items-center gap-3 bg-slate-50 px-4 py-5 sm:px-6">
+        <div class="flex min-h-24 items-center gap-3 bg-white px-4 py-5 transition-colors hover:bg-green-50/50 sm:px-6">
           <ClipboardList :size="20" class="shrink-0 text-green-700" aria-hidden="true" /><span
             class="text-sm font-medium text-slate-700">{{ t('landing.capabilities.structured') }}</span>
         </div>
-        <div class="flex min-h-24 items-center gap-3 bg-slate-50 px-4 py-5 sm:px-6">
+        <div class="flex min-h-24 items-center gap-3 bg-white px-4 py-5 transition-colors hover:bg-green-50/50 sm:px-6">
           <Activity :size="20" class="shrink-0 text-green-700" aria-hidden="true" /><span
             class="text-sm font-medium text-slate-700">{{ t('landing.capabilities.monitored') }}</span>
         </div>
-        <div class="flex min-h-24 items-center gap-3 bg-slate-50 px-4 py-5 sm:px-6">
+        <div class="flex min-h-24 items-center gap-3 bg-white px-4 py-5 transition-colors hover:bg-green-50/50 sm:px-6">
           <BarChart3 :size="20" class="shrink-0 text-green-700" aria-hidden="true" /><span
             class="text-sm font-medium text-slate-700">{{ t('landing.capabilities.dataDriven') }}</span>
         </div>
@@ -324,7 +348,7 @@ onBeforeUnmount(() => {
         </div>
         <div class="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <article v-for="feature in featureItems" :key="feature.key"
-            class="group min-w-0 rounded-xl border border-slate-200 bg-white p-5 shadow-sm motion-safe:transition-colors hover:border-green-200 hover:bg-green-50/40">
+            class="group min-w-0 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_10px_30px_-24px_rgba(15,23,42,0.65)] motion-safe:transition-all hover:-translate-y-1 hover:border-green-200 hover:bg-green-50/40 hover:shadow-lg">
             <span
               class="flex size-10 items-center justify-center rounded-lg bg-green-50 text-green-700 group-hover:bg-green-100">
               <component :is="feature.icon" :size="21" aria-hidden="true" />
@@ -349,7 +373,7 @@ onBeforeUnmount(() => {
         </div>
         <ol class="mt-10 flex flex-col gap-8 lg:flex-row">
           <li v-for="(step, index) in flowSteps" :key="step"
-            class="relative min-w-0 flex-1 rounded-xl border border-green-200 bg-white p-5 shadow-sm">
+            class="relative min-w-0 flex-1 rounded-2xl border border-green-200/80 bg-white p-5 shadow-[0_14px_35px_-28px_rgba(22,101,52,0.7)]">
             <span class="flex size-9 items-center justify-center rounded-lg bg-green-700 font-semibold text-white"
               aria-hidden="true">{{ index + 1 }}</span>
             <h3 class="mt-4 font-semibold text-slate-900">{{ t(`landing.how.steps.${step}.title`) }}</h3>
@@ -374,7 +398,7 @@ onBeforeUnmount(() => {
 
     <section id="final-entry" class="px-4 py-16 sm:px-6 sm:py-20 lg:px-8" aria-labelledby="final-entry-title">
       <div
-        class="mx-auto max-w-5xl rounded-xl border border-green-200 bg-green-50 px-5 py-10 text-center shadow-sm sm:px-10 sm:py-12">
+        class="relative mx-auto max-w-5xl overflow-hidden rounded-3xl border border-green-200/80 bg-gradient-to-br from-green-50 via-white to-emerald-100/60 px-5 py-10 text-center shadow-[0_20px_60px_-36px_rgba(22,101,52,0.6)] sm:px-10 sm:py-12">
         <p class="text-xs font-semibold uppercase tracking-widest text-green-700">{{ t('landing.finalCta.eyebrow') }}
         </p>
         <h2 id="final-entry-title"
@@ -399,22 +423,40 @@ onBeforeUnmount(() => {
     </section>
   </main>
 
-  <footer class="px-4 py-10 text-green-100/80 sm:px-6 lg:px-8" style="background-color: oklch(0.43 0.09 153.54);">
-    <div class="mx-auto grid max-w-7xl gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_0.7fr_0.7fr]">
+  <footer class="relative overflow-hidden px-4 py-8 text-green-50/80 sm:px-6 sm:py-9 lg:px-8"
+    style="background: linear-gradient(135deg, oklch(0.34 0.055 160), oklch(0.42 0.07 154) 55%, oklch(0.36 0.06 175));">
+    <div class="pointer-events-none absolute -right-24 -top-32 size-80 rounded-full bg-white/10 blur-3xl"
+      aria-hidden="true"></div>
+    <div class="pointer-events-none absolute -bottom-40 left-1/3 size-80 rounded-full bg-lime-200/10 blur-3xl"
+      aria-hidden="true"></div>
+    <div class="relative mx-auto grid max-w-7xl gap-7 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_0.7fr_0.7fr]">
       <div class="max-w-sm">
-        <RouterLink to="/" class="inline-flex min-h-11 items-center gap-3 rounded-lg text-white"
+        <RouterLink to="/"
+          class="inline-flex min-h-11 items-center gap-3 rounded-xl text-white transition-opacity hover:opacity-90"
           :aria-label="t('landing.nav.home')">
-          <span class="flex size-9 items-center justify-center rounded-lg bg-green-700">
+          <span
+            class="flex size-10 items-center justify-center rounded-xl bg-white text-green-800 shadow-lg shadow-black/10">
             <Sprout :size="22" aria-hidden="true" />
           </span>
-          <span class="text-lg font-semibold tracking-tight">KebunHub</span>
+          <span><span class="block text-lg font-semibold leading-5 tracking-tight">KebunHub</span><span
+              class="text-[10px] font-medium uppercase tracking-[0.18em] text-green-200/70">Farm
+              management</span></span>
         </RouterLink>
-        <p class="mt-3 text-sm leading-6 text-green-100/65">{{ t('landing.footer.description') }}</p>
+        <p class="mt-3 text-sm leading-6 text-green-50/75">{{ t('landing.footer.description') }}</p>
+        <div
+          class="mt-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs text-green-50/80 backdrop-blur">
+          <span class="size-2 rounded-full bg-emerald-300 shadow-[0_0_0_4px_rgb(110_231_183_/_0.12)]"></span>
+          {{ t('landing.capabilities.monitored') }}
+        </div>
+        <p class="relative mx-auto mt-7 max-w-7xl border-t border-white/15 pt-4 text-xs text-green-50/65">
+          {{ t('landing.footer.copyright', { year: currentYear }) }}
+        </p>
       </div>
 
-      <nav :aria-label="t('landing.footer.application')">
-        <p class="font-semibold text-white">{{ t('landing.footer.application') }}</p>
-        <ul class="mt-3 space-y-1 text-sm">
+      <nav class="lg:pl-8" :aria-label="t('landing.footer.application')">
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-green-200/60">{{
+          t('landing.footer.application') }}</p>
+        <ul class="mt-4 space-y-1 text-sm">
           <li><a href="#features" class="inline-flex min-h-11 items-center hover:text-white hover:underline">{{
             t('landing.nav.features') }}</a></li>
           <li><a href="#how-it-works" class="inline-flex min-h-11 items-center hover:text-white hover:underline">{{
@@ -439,14 +481,17 @@ onBeforeUnmount(() => {
       </nav>
 
       <nav :aria-label="t('landing.footer.help')">
-        <p class="font-semibold text-white">{{ t('landing.footer.help') }}</p>
-        <RouterLink to="/help" class="mt-3 inline-flex min-h-11 items-center text-sm hover:text-white hover:underline">
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-green-200/60">{{ t('landing.footer.help') }}
+        </p>
+        <RouterLink to="/help"
+          class="mt-4 inline-flex min-h-11 items-center text-sm transition-colors hover:text-white hover:underline">
           {{ t('auth.help') }}</RouterLink>
       </nav>
 
       <nav :aria-label="t('landing.footer.legal')">
-        <p class="font-semibold text-white">{{ t('landing.footer.legal') }}</p>
-        <ul class="mt-3 space-y-1 text-sm">
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-green-200/60">{{ t('landing.footer.legal') }}
+        </p>
+        <ul class="mt-4 space-y-1 text-sm">
           <li>
             <RouterLink to="/privacy" class="inline-flex min-h-11 items-center hover:text-white hover:underline">{{
               t('auth.privacy') }}</RouterLink>
@@ -457,10 +502,6 @@ onBeforeUnmount(() => {
           </li>
         </ul>
       </nav>
-
     </div>
-    <p class="mx-auto mt-10 max-w-7xl border-t border-green-200/20 pt-6 text-center text-xs text-green-100/70">
-      {{ t('landing.footer.copyright', { year: currentYear }) }}
-    </p>
   </footer>
 </template>
