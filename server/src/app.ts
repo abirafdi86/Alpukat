@@ -8,6 +8,9 @@ import { isAuthServiceError } from './routes/auth.js'
 import { UserManagementError } from './services/users.js'
 import { FarmManagementError } from './services/farms.js'
 import { BlockManagementError } from './services/blocks.js'
+import { TreeManagementError } from './services/trees.js'
+import { HarvestManagementError } from './services/harvests.js'
+import { ActivityManagementError } from './services/activities.js'
 
 export function createApp() {
   const app = express()
@@ -38,6 +41,18 @@ export function createApp() {
     }
     if (error instanceof BlockManagementError) {
       const status = error.code === 'BLOCK_NOT_FOUND' ? 404 : error.code === 'BLOCK_NAME_EXISTS' ? 409 : 400
+      return response.status(status).json({ success: false, code: error.code, message: error.message })
+    }
+    if (error instanceof TreeManagementError) {
+      const status = error.code === 'TREE_NOT_FOUND' || error.code === 'FARM_NOT_FOUND' || error.code === 'BLOCK_NOT_FOUND' ? 404 : error.code === 'TREE_CODE_ALREADY_EXISTS' || error.code === 'BLOCK_FARM_MISMATCH' ? 409 : 400
+      return response.status(status).json({ success: false, code: error.code, message: error.message })
+    }
+    if (error instanceof HarvestManagementError) {
+      const status = error.code === 'HARVEST_NOT_FOUND' || error.code === 'FARM_NOT_FOUND' || error.code === 'BLOCK_NOT_FOUND' || error.code === 'TREE_NOT_FOUND' || error.code === 'WORKER_NOT_FOUND_OR_INACTIVE' ? 404 : error.code === 'BLOCK_FARM_MISMATCH' || error.code === 'TREE_BLOCK_MISMATCH' ? 409 : 400
+      return response.status(status).json({ success: false, code: error.code, message: error.message })
+    }
+    if (error instanceof ActivityManagementError) {
+      const status = error.code === 'ACTIVITY_NOT_FOUND' || error.code === 'FARM_NOT_FOUND' || error.code === 'BLOCK_NOT_FOUND' || error.code === 'TREE_NOT_FOUND' || error.code === 'WORKER_NOT_FOUND_OR_INACTIVE' ? 404 : error.code === 'BLOCK_FARM_MISMATCH' || error.code === 'TREE_BLOCK_MISMATCH' ? 409 : 400
       return response.status(status).json({ success: false, code: error.code, message: error.message })
     }
     console.error(error)
