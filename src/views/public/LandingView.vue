@@ -48,10 +48,11 @@ const retryAfterSeconds = ref(0)
 let demoController: AbortController | undefined
 let retryTimer: number | undefined
 
-const primaryDestination = computed(() => auth.isAuthenticated
+const isAuthenticatedVisitor = computed(() => auth.isHydrated && auth.isAuthenticated)
+const primaryDestination = computed(() => isAuthenticatedVisitor.value
   ? resolveAuthenticatedDestination(router, auth.workspaceCount)
   : { name: 'register' })
-const primaryActionLabel = computed(() => auth.isAuthenticated ? t('landing.actions.openDashboard') : t('landing.actions.getStarted'))
+const primaryActionLabel = computed(() => isAuthenticatedVisitor.value ? t('landing.actions.openDashboard') : t('landing.actions.getStarted'))
 const demoDisabled = computed(() => demoPending.value || auth.isLoading || retryAfterSeconds.value > 0)
 const demoActionLabel = computed(() => {
   if (demoPending.value) return t('authActions.exploringDemo')
@@ -156,7 +157,7 @@ onBeforeUnmount(() => {
 
       <div class="hidden items-center gap-2 md:flex">
         <AuthLocaleSwitcher />
-        <RouterLink v-if="!auth.isAuthenticated" to="/login" class="ui-button ui-button-ghost">{{
+        <RouterLink v-if="!isAuthenticatedVisitor" to="/login" class="ui-button ui-button-ghost">{{
           t('landing.actions.signIn') }}</RouterLink>
         <RouterLink :to="primaryDestination" class="ui-button ui-button-primary">{{ primaryActionLabel }}</RouterLink>
       </div>
@@ -186,7 +187,7 @@ onBeforeUnmount(() => {
             class="text-sm font-medium text-slate-700">{{ t('common.language') }}</span>
           <AuthLocaleSwitcher />
         </div>
-        <RouterLink v-if="!auth.isAuthenticated" to="/login" class="ui-button ui-button-secondary w-full"
+        <RouterLink v-if="!isAuthenticatedVisitor" to="/login" class="ui-button ui-button-secondary w-full"
           @click="closeMenu">{{ t('landing.actions.signIn') }}</RouterLink>
         <RouterLink :to="primaryDestination" class="ui-button ui-button-primary mt-2 w-full" @click="closeMenu">{{
           primaryActionLabel }}</RouterLink>
@@ -201,7 +202,7 @@ onBeforeUnmount(() => {
         class="pointer-events-none absolute -right-32 top-10 size-80 rounded-full border border-green-100 bg-green-50"
         aria-hidden="true"></div>
       <div
-        class="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[minmax(0,0.9fr)_minmax(520px,1.1fr)] lg:gap-16 lg:px-8 lg:py-24">
+        class="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[minmax(0,0.9fr)_minmax(520px,1.1fr)] lg:gap-16 lg:px-8 lg:py-14">
         <div class="min-w-0">
           <p
             class="inline-flex items-center gap-2 rounded-full border border-green-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-widest text-green-700">
@@ -216,21 +217,17 @@ onBeforeUnmount(() => {
           </p>
 
           <AuthError v-if="demoErrorOrigin === 'hero'" class="mt-6 max-w-xl" :message="demoError" />
-          <div class="mt-8 flex flex-col gap-3 min-[400px]:flex-row">
-            <RouterLink :to="primaryDestination" class="ui-button ui-button-primary min-w-40">
-              {{ primaryActionLabel }}
-              <ArrowRight :size="17" aria-hidden="true" />
-            </RouterLink>
-            <UiButton v-if="!auth.isAuthenticated" variant="secondary" class="min-w-40" :loading="demoPending"
+          <div v-if="isAuthenticatedVisitor" class="mt-8 flex">
+            <RouterLink :to="primaryDestination" class="ui-button ui-button-primary min-w-44">{{ t('landing.actions.openDashboard') }}<ArrowRight :size="17" aria-hidden="true" /></RouterLink>
+          </div>
+          <div v-else class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <RouterLink to="/login" class="ui-button ui-button-secondary sm:min-w-32">{{ t('landing.actions.signIn') }}</RouterLink>
+            <RouterLink to="/register" class="ui-button ui-button-primary sm:min-w-40">{{ t('landing.actions.getStarted') }}<ArrowRight :size="17" aria-hidden="true" /></RouterLink>
+            <UiButton variant="ghost" class="sm:min-w-36" :loading="demoPending"
               :loading-label="t('authActions.exploringDemo')" :disabled="demoDisabled" @click="exploreDemo('hero')">
               {{ demoActionLabel }}
             </UiButton>
           </div>
-          <p v-if="!auth.isAuthenticated" class="mt-5 text-sm text-slate-500">
-            {{ t('landing.hero.hasAccount') }}
-            <RouterLink to="/login" class="font-semibold text-green-700 hover:text-green-800 hover:underline">{{
-              t('landing.actions.signIn') }}</RouterLink>
-          </p>
         </div>
 
         <div class="min-w-0" role="region" :aria-label="t('landing.preview.ariaLabel')">
@@ -386,7 +383,7 @@ onBeforeUnmount(() => {
         <p class="mx-auto mt-4 max-w-2xl leading-7 text-slate-600">{{ t('landing.finalCta.description') }}</p>
         <AuthError v-if="demoErrorOrigin === 'final'" class="mx-auto mt-6 max-w-xl text-left" :message="demoError" />
 
-        <div v-if="auth.isAuthenticated" class="mt-8 flex justify-center">
+        <div v-if="isAuthenticatedVisitor" class="mt-8 flex justify-center">
           <RouterLink :to="primaryDestination" class="ui-button ui-button-primary min-w-44">{{
             t('landing.actions.openDashboard') }}
             <ArrowRight :size="17" aria-hidden="true" />
@@ -422,15 +419,15 @@ onBeforeUnmount(() => {
             t('landing.nav.features') }}</a></li>
           <li><a href="#how-it-works" class="inline-flex min-h-11 items-center hover:text-white hover:underline">{{
             t('landing.nav.howItWorks') }}</a></li>
-          <li v-if="!auth.isAuthenticated">
+          <li v-if="!isAuthenticatedVisitor">
             <RouterLink to="/login" class="inline-flex min-h-11 items-center hover:text-white hover:underline">{{
               t('landing.actions.signIn') }}</RouterLink>
           </li>
-          <li v-if="!auth.isAuthenticated">
+          <li v-if="!isAuthenticatedVisitor">
             <RouterLink to="/register" class="inline-flex min-h-11 items-center hover:text-white hover:underline">{{
               t('landing.actions.createWorkspace') }}</RouterLink>
           </li>
-          <li v-if="!auth.isAuthenticated"><button type="button"
+          <li v-if="!isAuthenticatedVisitor"><button type="button"
               class="text-left text-sm hover:text-white hover:underline disabled:opacity-60" :disabled="demoDisabled"
               @click="exploreDemo('final')">{{ demoActionLabel }}</button></li>
           <li v-else>
